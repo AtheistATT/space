@@ -21,8 +21,8 @@ class Controller:
         #cls.tick = 0
         cls.score = 0 # Счетчик очков
         cls.asteroids = []
-        cls.fall_speed = 5 # Начальная скорость падения астеройдов
-        cls.max_speed = 20 # максимальная скорость
+        cls.fall_speed = SCREEN_HIGHT // 160 # Начальная скорость падения астеройдов
+        cls.max_speed = SCREEN_HIGHT // 40 # максимальная скорость
         cls.hitbox_redution = 0.4 # Переменная отвечает за уменьшение хитбокса. На большой скорости коллизии резковаты.
         cls.gams_state = "START"
 
