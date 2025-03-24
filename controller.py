@@ -86,7 +86,7 @@ class Controller:
 
                 #cls.tick += 1
             case "END":
-                cls.game_render.draw_text(f"Игра окончена.\n Ваш счет: {cls.score}\nНажмите пробел...")
+                cls.game_render.draw_text(f"Игра окончена.\n Ваш счет: {cls.score}\nНажмите пробел для выхода...\n R повторить.")
     
     @classmethod
     def check_collision(cls): # Просверка на столкновение.
@@ -119,5 +119,12 @@ class Controller:
                                 cls.gams_state = "PLAY"
                             elif cls.gams_state == "END":
                                 exit()
+                        case pygame.K_r:
+                            if cls.gams_state == "END":
+                                cls.asteroids.clear()
+                                cls.score = 0
+                                cls.fall_speed = SCREEN_HIGHT // 160
+                                cls.gams_state = "START"
+
                 case pygame.KEYUP:
                     cls.player.x = 1 * cls.frame_size
