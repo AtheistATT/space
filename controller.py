@@ -25,22 +25,15 @@ class Controller:
         cls.max_speed = SCREEN_HIGHT // 40 # максимальная скорость
         cls.hitbox_redution = 0.4 # Переменная отвечает за уменьшение хитбокса. На большой скорости коллизии резковаты.
         cls.gams_state = "START"
-
+        cls.frame_size = SCREEN_WIDTH // 3
+        
         pygame.mixer.music.load("resource/magic sky.ogg") # Загружаем музыку
 
-        for col in range(5): # Создаем задний фон
-            for row in range(3):
-                bf = objects.GameObject("resource/background.png", 0, 0)
+        cls.update_background()# Создаем задний фон
 
-                bf.current_frame = random.choice(range(len(bf.frames)))
-                bf.x = row * (SCREEN_WIDTH // 3)
-                bf.y = col * (SCREEN_WIDTH // 3)
-
-                cls.background.append(bf)
-                cls.frame_size = SCREEN_WIDTH // 3
                 
 
-                cls.player = objects.GameObject("resource/player.png", 1 * cls.frame_size, 4 * cls.frame_size) # Создаем корабль игрока
+        cls.player = objects.GameObject("resource/player.png", 1 * cls.frame_size, 4 * cls.frame_size) # Создаем корабль игрока
 
     @classmethod
     def update(cls):
@@ -72,29 +65,42 @@ class Controller:
                     pygame.mixer.music.stop()
                     cls.gams_state = "END"
 
-                asteroids_new_list = [ast for ast in cls.asteroids if ast.y < 5 * cls.frame_size] # Создаем список астеройдов за исключением тех что вышли за экран.
-
-                if len(asteroids_new_list) != len(cls.asteroids): # Если есть астоеройды за экраном.
+                if cls.asteroids[0].y > SCREEN_HIGHT:
+                    cls.asteroids.clear()
                     cls.score += 1 # Добавляем игроку очко
                     if cls.max_speed > cls.fall_speed: # Проверяем что скорость не достигла максимума.
                         cls.fall_speed += 1 # Увеличиваем скорость
-                    cls.asteroids = asteroids_new_list # Удаляем лишние астеройды
 
                 background = [x.get_render_data() for x in cls.background] # Преобразуем задний фон в списки для вывода на экран
                 asteroids = [x.get_render_data() for x in cls.asteroids] # Преобразуем астеройды в списки вывода на экран
                 cls.game_render.draw_game_frame(background + [cls.player.get_render_data()] + asteroids, cls.score) # Передаем объекты в объект рендер для отрисовки
 
-                #cls.tick += 1
             case "END":
                 cls.game_render.draw_text(f"Игра окончена.\n Ваш счет: {cls.score}\nНажмите пробел для выхода...\n R повторить.")
     
     @classmethod
     def check_collision(cls): # Просверка на столкновение.
         for ast in cls.asteroids:
+            player_top = cls.player.y + cls.frame_size * cls.hitbox_redution
+            player_bottom = cls.player.y + cls.frame_size
+            ast_top = ast.y + cls.frame_size * cls.hitbox_redution
+            ast_bottom = ast.y + cls.frame_size
             if cls.player.x == ast.x:
-                if ast.y + cls.frame_size > cls.player.y + cls.frame_size * cls.hitbox_redution and ast.y < cls.player.y + cls.frame_size * cls.hitbox_redution:
+                if ast_bottom > player_top and ast_top < player_bottom:
                     return True
         return False
+
+    @classmethod
+    def update_background(cls):
+        for col in range(5): 
+            for row in range(3):
+                bf = objects.GameObject("resource/background.png", 0, 0)
+
+                bf.current_frame = random.choice(range(len(bf.frames)))
+                bf.x = row * (SCREEN_WIDTH // 3)
+                bf.y = col * (SCREEN_WIDTH // 3)
+
+                cls.background.append(bf)
 
     @classmethod
     def evern_handler(cls, events):
@@ -124,6 +130,7 @@ class Controller:
                                 cls.asteroids.clear()
                                 cls.score = 0
                                 cls.fall_speed = SCREEN_HIGHT // 160
+                                cls.update_background()
                                 cls.gams_state = "START"
 
                 case pygame.KEYUP:
