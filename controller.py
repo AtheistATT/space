@@ -92,6 +92,7 @@ class Controller:
 
     @classmethod
     def update_background(cls):
+        cls.background.clear()
         for col in range(5): 
             for row in range(3):
                 bf = objects.GameObject("resource/background.png", 0, 0)
