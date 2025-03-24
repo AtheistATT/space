@@ -21,8 +21,8 @@ class Controller:
         #cls.tick = 0
         cls.score = 0 # Счетчик очков
         cls.asteroids = []
-        cls.fall_speed = SCREEN_HIGHT // 160 # Начальная скорость падения астеройдов
-        cls.max_speed = SCREEN_HIGHT // 40 # максимальная скорость
+        cls.fall_speed = SCREEN_HEIGHT // 160 # Начальная скорость падения астеройдов
+        cls.max_speed = SCREEN_HEIGHT // 40 # максимальная скорость
         cls.hitbox_redution = 0.4 # Переменная отвечает за уменьшение хитбокса. На большой скорости коллизии резковаты.
         cls.gams_state = "START"
         cls.frame_size = SCREEN_WIDTH // 3
@@ -65,7 +65,7 @@ class Controller:
                     pygame.mixer.music.stop()
                     cls.gams_state = "END"
 
-                if cls.asteroids[0].y > SCREEN_HIGHT:
+                if cls.asteroids[0].y > SCREEN_HEIGHT:
                     cls.asteroids.clear()
                     cls.score += 1 # Добавляем игроку очко
                     if cls.max_speed > cls.fall_speed: # Проверяем что скорость не достигла максимума.
@@ -129,7 +129,7 @@ class Controller:
                             if cls.gams_state == "END":
                                 cls.asteroids.clear()
                                 cls.score = 0
-                                cls.fall_speed = SCREEN_HIGHT // 160
+                                cls.fall_speed = SCREEN_HEIGHT // 160
                                 cls.update_background()
                                 cls.gams_state = "START"
 

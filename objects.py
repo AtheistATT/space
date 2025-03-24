@@ -16,8 +16,8 @@ class GameObject:
 
         full_image = pygame.image.load(image) # Загружаем изображение
 
-        image_width, image_hight = full_image.get_size()
-        number_of_frames = image_hight // image_width
+        image_width, image_height = full_image.get_size()
+        number_of_frames = image_height // image_width
         
         for i in range(number_of_frames): # Разбиваем файл на кадры и добавляем их в список кадров.
             frame = full_image.subsurface(pygame.Rect(0, i * image_width, image_width, image_width))

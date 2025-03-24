@@ -8,7 +8,7 @@ from render import Render # Импортирование модуля для о�
 from constants import * # Импортирование системных констант
 from controller import Controller
 pygame.init()
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HIGHT)) # Размер дисплея определяется значениями констант
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT)) # Размер дисплея определяется значениями констант
 clock = pygame.time.Clock()
 Controller.init(Render(screen)) # Создаем экземпляр класса Rander. Он будет работать с переданным ему состоянием экрана и сразу передаем его в контроллер
 
