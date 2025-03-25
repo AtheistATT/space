@@ -26,6 +26,8 @@ class Controller:
         cls.hitbox_redution = 0.4 # Переменная отвечает за уменьшение хитбокса. На большой скорости коллизии резковаты.
         cls.gams_state = "START"
         cls.frame_size = SCREEN_WIDTH // 3
+        cls.cheat = False # состояние чит режима для розыгрыша
+        cls.free_space = 0
         
         pygame.mixer.music.load("resource/magic sky.ogg") # Загружаем музыку
 
@@ -48,16 +50,20 @@ class Controller:
 
                 cls.player.current_frame = random.randint(0, len(cls.player.frames) - 1) # Анимация огня
 
+
                 if len(cls.asteroids) == 0: # Спаун астеройдов. Происходит когда их список пуст.
-                    free_space = random.randint(0,2)# Определяем позицию без астеройда.
+                    cls.free_space = random.randint(0,2)# Определяем позицию без астеройда.
                     for i in range(3):
-                        if i == free_space:
+                        if i == cls.free_space:
                             continue
                         else:
                             ast = objects.GameObject("resource/asteroid.png", i * cls.frame_size, -cls.frame_size)
                             ast.current_frame = random.randint(0, len(ast.frames) - 1)
                             cls.asteroids.append(ast)
-                
+
+                if cls.cheat and cls.asteroids[0].y > SCREEN_HEIGHT // 2: # перемещаем на свободное место корабль игрока
+                    cls.player.x = cls.free_space * cls.frame_size
+
                 for ast in cls.asteroids:# Двигаем астеройды вниз.
                     ast.y += cls.fall_speed
 
@@ -117,9 +123,11 @@ class Controller:
                         case pygame.K_ESCAPE:
                             exit()
                         case pygame.K_LEFT:
-                            cls.player.x = 0
+                            if not cls.cheat:
+                                cls.player.x = 0
                         case pygame.K_RIGHT:
-                            cls.player.x = 2 * cls.frame_size
+                            if not cls.cheat:
+                                cls.player.x = 2 * cls.frame_size
                         case pygame.K_SPACE:
                             if cls.gams_state == "START":
                                 pygame.mixer.music.play(-1)
@@ -133,6 +141,8 @@ class Controller:
                                 cls.fall_speed = SCREEN_HEIGHT // 160
                                 cls.update_background()
                                 cls.gams_state = "START"
-
+                        case pygame.K_c:
+                            cls.cheat = not cls.cheat
                 case pygame.KEYUP:
-                    cls.player.x = 1 * cls.frame_size
+                    if not cls.cheat:
+                        cls.player.x = 1 * cls.frame_size
